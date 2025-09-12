@@ -1,7 +1,7 @@
-# unknown2
+# unknown2.ts
 
 ``` bash
-deno add @ppz-http/unknown2
+deno add @ppz/unknown2
 ```
 
 [unknown](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#any-unknown-object-void-undefined-null-and-never-assignability) type -> known type

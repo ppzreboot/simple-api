@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert/equals'
-import { make_unknown_2 } from '../src/mod.ts'
+import { make_unknown_2 } from '../lib/mod.ts'
 
 interface User {
     id: string

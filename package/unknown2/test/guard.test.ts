@@ -6,7 +6,7 @@ import {
     not_empty_string,
     is_number,
     nullable,
-} from '../src/mod.ts'
+} from '../lib/mod.ts'
 
 // describe the user type
 const user_description = {

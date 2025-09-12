@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert'
-import { is_obj } from '../src/mod.ts'
+import { is_obj } from '../lib/mod.ts'
 
 // typeof null === 'object'
 Deno.test('null is not object', () => {

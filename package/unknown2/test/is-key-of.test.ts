@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert/equals'
-import { is_key_of } from '../src/mod.ts'
+import { is_key_of } from '../lib/mod.ts'
 
 Deno.test('is key of', () => {
     assertEquals(is_key_of('name', { name: 'ppz' }), true)

@@ -1,5 +1,5 @@
 {
     "name": "@ppz/unknown2",
     "version": "0.0.0",
-    "exports": "./src/mod.ts"
+    "exports": "./lib/mod.ts"
 }
