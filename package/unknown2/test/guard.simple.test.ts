@@ -1,5 +1,6 @@
-import { assertEquals } from '@std/assert/equals'
+import { assertEquals } from '@std/assert'
 import { make_unknown_2 } from '../lib/mod.ts'
+import { is_integer, is_string } from "../lib/guards.ts";
 
 interface User {
     id: string
@@ -8,19 +9,9 @@ interface User {
 }
 
 const unknown_2_user = make_unknown_2<User>({
-    id: (val): val is string =>
-        typeof val === 'string'
-        && val.length > 0
-    ,
-    name: (val): val is string =>
-        typeof val === 'string'
-        && val.length >= 3
-    ,
-    year: (val): val is number =>
-        typeof val === 'number'
-        && Number.isInteger(val)
-        && val > 0
-    ,
+    id: is_string(val => val.length > 0),
+    name: is_string(val => val.length >= 3),
+    year: is_integer(val => val > 0),
 })
 
 Deno.test('guard user - simple', () => {
@@ -30,11 +21,11 @@ Deno.test('guard user - simple', () => {
         year: 3,
     }
     
-    const is_user = unknown_2_user(maybe_user)
-    if (is_user) {
-        const _: User = maybe_user
+    const u2_user = unknown_2_user(maybe_user)
+    assertEquals(u2_user.yes, true)
+    if (u2_user.yes) {
+        const _: User = u2_user.data
     }
-    assertEquals(is_user, true)
 })
 
 Deno.test('guard user - type is safe, length is not enough', () => {
@@ -44,6 +35,9 @@ Deno.test('guard user - type is safe, length is not enough', () => {
         year: 3,
     }
     
-    const is_user = unknown_2_user(maybe_user)
-    assertEquals(is_user, false)
+    const u2_user = unknown_2_user(maybe_user)
+    assertEquals(u2_user.yes, false)
+    if (!u2_user.yes) {
+        assertEquals(u2_user.keys, ['name'])
+    }
 })

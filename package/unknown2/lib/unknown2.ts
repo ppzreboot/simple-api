@@ -1,23 +1,48 @@
 export
-type I_type_desc<D extends object> = {
-    [K in keyof D]: (val: unknown) => val is D[K]
+type Guard<D> = {
+    yes: true
+    data: D
+} | {
+    yes: false
+    keys: (string | number)[]
 }
 
 export
-function make_unknown_2<D extends object>(desc: I_type_desc<D>) {
-    return function unknown_2(data: unknown): data is D{
-        if (!is_obj(data))
-            return false
+type I_unknown_2<D> = (val: unknown) => Guard<D>
 
+export
+type I_type_desc<D extends object> = {
+    [K in keyof D]: I_unknown_2<D[K]>
+}
+
+export
+function make_unknown_2<D extends object>(desc: I_type_desc<D>): I_unknown_2<D> {
+    return function unknown_2(data: unknown): Guard<D> {
+        if (!is_obj(data))
+            return {
+                yes: false,
+                keys: [],
+            }
         for (const key in desc) {
             const guard_item = desc[key]
-            if (
-                !is_key_of(key, data)
-                || !guard_item(data[key])
-            )
-                return false
+            if (!is_key_of(key, data)) {
+                return {
+                    yes: false,
+                    keys: [key],
+                }
+            }
+            const check_result = guard_item(data[key])
+            if (!check_result.yes) {
+                return {
+                    yes: false,
+                    keys: [key, ...check_result.keys],
+                }
+            }
         }
-        return true
+        return {
+            yes: true,
+            data: data as D,
+        }
     }
 }
 

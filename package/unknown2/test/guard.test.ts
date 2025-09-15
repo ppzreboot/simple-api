@@ -1,9 +1,9 @@
-import { assertEquals } from '@std/assert/equals'
+import { assertStrictEquals, assertEquals } from '@std/assert'
 import {
     type I_infer,
     make_unknown_2,
     is_string,
-    not_empty_string,
+    nonempty_string,
     is_number,
     nullable,
 } from '../lib/mod.ts'
@@ -15,8 +15,8 @@ const user_description = {
         n.length > 2
     ),
     classroom: make_unknown_2({
-        id: not_empty_string,
-        name: nullable(not_empty_string),
+        id: nonempty_string(),
+        name: nullable(nonempty_string()),
         index: nullable(is_number(n =>
             Number.isInteger(n)
         )),
@@ -39,26 +39,30 @@ Deno.test('guard test - real', () => {
     
     // const _: I_user = user // Type 'unknown' is not assignable to...
 
-    const is_user = unknown_2_user(user_unknown)
-    assertEquals(is_user, true)
-    if (is_user) {
-        const user: I_user = user_unknown
-        assertEquals(user.id, '1')
-        assertEquals(user.stu_name, 'ppz')
+    const u2_user = unknown_2_user(user_unknown)
+    assertStrictEquals(u2_user.yes, true)
+    if (u2_user.yes) {
+        const user: I_user = u2_user.data
+        assertStrictEquals(user.id, '1')
+        assertStrictEquals(user.stu_name, 'ppz')
     }
 })
 
 Deno.test('guard test - real 2', () => {
     const user_unknown: unknown = {
         id: '1',
-        stu_name: 'pz', // too short
+        stu_name: 'pzz',
         classroom: {
             id: '1',
             name: '101',
-            index: 1,
+            index: 1.1, // not integer
         },
     }
     
-    const is_user = unknown_2_user(user_unknown)
-    assertEquals(is_user, false)
+    const u2_user = unknown_2_user(user_unknown)
+    assertStrictEquals(u2_user.yes, false)
+    if (u2_user.yes === false) {
+        assertStrictEquals(u2_user.keys.length, 2)
+        assertEquals(u2_user.keys, ['classroom', 'index'])
+    }
 })
