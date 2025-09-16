@@ -1,0 +1,8 @@
+{
+    "name": "@ppz-http/api",
+    "version": "0.0.0",
+    "exports": {
+        ".": "./lib/mod.ts",
+        "./body": "./lib/body.ts"
+    }
+}
