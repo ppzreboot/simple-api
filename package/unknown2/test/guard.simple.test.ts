@@ -1,4 +1,4 @@
-import { assertEquals } from '@std/assert'
+import { assertEquals, assertStrictEquals } from '@std/assert'
 import { make_unknown_2 } from '../lib/mod.ts'
 import { is_integer, is_string } from "../lib/guards.ts";
 
@@ -22,10 +22,8 @@ Deno.test('guard user - simple', () => {
     }
     
     const u2_user = unknown_2_user(maybe_user)
-    assertEquals(u2_user.yes, true)
-    if (u2_user.yes) {
-        const _: User = u2_user.data
-    }
+    assertStrictEquals(u2_user.yes, true)
+    const _: User = u2_user.data
 })
 
 Deno.test('guard user - type is safe, length is not enough', () => {
@@ -36,8 +34,6 @@ Deno.test('guard user - type is safe, length is not enough', () => {
     }
     
     const u2_user = unknown_2_user(maybe_user)
-    assertEquals(u2_user.yes, false)
-    if (!u2_user.yes) {
-        assertEquals(u2_user.keys, ['name'])
-    }
+    assertStrictEquals(u2_user.yes, false)
+    assertEquals(u2_user.keys, ['name'])
 })

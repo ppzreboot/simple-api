@@ -69,12 +69,12 @@ function is_array<D>(unknown_2_D: I_unknown_2<D>): I_unknown_2<D[]> {
                 yes: false,
                 keys: [],
             }
-        for(const index in val) {
-            const check_result = unknown_2_D(val[index])
+        for(let i = 0; i < val.length; i++) {
+            const check_result = unknown_2_D(val[i])
             if (!check_result.yes) {
                 return {
                     yes: false,
-                    keys: [index, ...check_result.keys],
+                    keys: [i, ...check_result.keys],
                 }
             }
         }
