@@ -12,11 +12,17 @@ export
 function simple_serve(opts: HttpServerOpts): RawHttpHandler {
 	// 初始化 opts
 	const log = opts.logger ?? default_logger
+	const routes: HttpRoute[] = opts.routes.map(r => [r[0], r[1], r[2]])
+	log.info(
+		routes
+			.map(r => `[API] ${r[0]} ${r[1]}`)
+			.join('\n')
+	)
 	return async (req: Request) =>
 		await handle_http({
 			log,
 			req,
-			routes: opts.routes,
+			routes,
 		})
 }
 
