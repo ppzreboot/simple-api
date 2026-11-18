@@ -5,6 +5,7 @@ Simple API 提供最基本的 http api 功能。
 ## Features
 + 路径精确匹配，如 `/api` 与 `/api/` 是不同的路径
 + 不支持路径参数，应使用 query
++ 不刻意追求 restful
 
 ## 中间件
 不支持。
@@ -15,10 +16,15 @@ import { simple_serve } from '@ppz/simple-api'
 import { route1, route2 } from './xxx.ts'
 
 const routes = [route1, route2]
-for (const route of routes)
+for (const route of routes) {
+	const raw_handle = route[2]
 	route[2] = ctx => {
-		// ...
+		// before
+		const res = await raw_handle(ctx)
+		// after
+		return res
 	}
+}
 
 ```
 
