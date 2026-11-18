@@ -4,10 +4,12 @@ const _err = (default_msg: string, status: number) =>
 	(msg = default_msg) =>
 		new Response(msg, { status })
 
-export const bad_request = _err('baD requesT', 400)
+type make_err = (msg?: string) => Response
 
-export const not_found = _err('noT founD', 404)
+export const bad_request: make_err = _err('baD requesT', 400)
 
-export const unknown_error = _err('unknowN erroR', 500)
+export const not_found: make_err = _err('noT founD', 404)
 
-export const not_implemented = _err('noT implementeD', 501)
+export const unknown_error: make_err = _err('unknowN erroR', 500)
+
+export const not_implemented: make_err = _err('noT implementeD', 501)

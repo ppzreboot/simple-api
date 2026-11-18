@@ -1,6 +1,7 @@
 {
 	"name": "@ppz/simple-api",
 	"version": "1.0.0",
+	"license": "UNLICENSED",
 	"exports": {
 		".": "./lib/zz.ts"
 	}
