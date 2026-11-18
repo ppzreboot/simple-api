@@ -2,6 +2,10 @@
 Simple API 提供最基本的 http api 功能。
 旨在在 ai agent 时代，提高人类对代码的掌控度（越简单，越容易掌控）。
 
+## TODO
++ CORS
++ input: query & json
+
 ## Features
 + 路径精确匹配，如 `/api` 与 `/api/` 是不同的路径
 + 不支持路径参数，应使用 query

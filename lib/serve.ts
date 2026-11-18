@@ -8,6 +8,7 @@ const default_logger: _Logger = {
 	error: console.error,
 }
 
+/** http server 入口 */
 export
 function simple_serve(opts: HttpServerOpts): RawHttpHandler {
 	// 初始化 opts
