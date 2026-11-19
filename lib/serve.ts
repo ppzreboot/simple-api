@@ -15,10 +15,10 @@ function simple_serve(opts: HttpServerOpts): RawHttpHandler {
 	// 初始化 opts
 	const log = opts.logger ?? default_logger
 	const routes: HttpRoute[] = opts.routes.map(r => [r[0], r[1], r[2]])
-	log.info(
+	log.info('serving routes:',
 		routes
-			.map(r => `[API] ${r[0]} ${r[1]}`)
-			.join('\n')
+			.map(r => `\n[API] ${r[0]} ${r[1]}`)
+			.join('')
 	)
 	return async (req: Request) =>
 		await handle_http({
@@ -28,11 +28,11 @@ function simple_serve(opts: HttpServerOpts): RawHttpHandler {
 		})
 }
 
-const prefix_log = (log: Logger, req: Request): Logger => ({
-	debug: (...items: unknown[]) => log.debug(`[${req.method} ${req.url}]`, ...items),
-	info: (...items: unknown[]) => log.info(`[${req.method} ${req.url}]`, ...items),
-	warn: (...items: unknown[]) => log.warn(`[${req.method} ${req.url}]`, ...items),
-	error: (...items: unknown[]) => log.error(`[${req.method} ${req.url}]`, ...items),
+const prefix_log = (log: Logger, req: Request, url: URL): Logger => ({
+	debug: (...items: unknown[]) => log.debug(`[${req.method} ${url.pathname}]`, ...items),
+	info: (...items: unknown[]) => log.info(`[${req.method} ${url.pathname}]`, ...items),
+	warn: (...items: unknown[]) => log.warn(`[${req.method} ${url.pathname}]`, ...items),
+	error: (...items: unknown[]) => log.error(`[${req.method} ${url.pathname}]`, ...items),
 })
 
 async function handle_http(job: {
@@ -41,8 +41,8 @@ async function handle_http(job: {
 	routes: HttpRoute[]
 }): Promise<Response> {
 	const { routes, req } = job
-	const log = prefix_log(job.log, req)
 	const url = new URL(job.req.url)
+	const log = prefix_log(job.log, req, url)
 	const ctx: HttpCTX = {
 		log,
 		url,
