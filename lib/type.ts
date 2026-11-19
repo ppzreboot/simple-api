@@ -19,7 +19,7 @@ export
 type _log = (...items: unknown[]) => void
 
 export
-interface _Logger {
+interface Logger {
 	debug: _log
 	info: _log
 	warn: _log
@@ -29,7 +29,7 @@ interface _Logger {
 /** 用户初始化 simple-api 时的参数。 */
 export
 interface HttpServerOpts {
-	logger?: _Logger
+	logger?: Logger
 	routes: HttpRoute[]
 }
 
@@ -40,7 +40,7 @@ interface HttpCTX {
 	/** 原始 http 请求。 */
 	req: Request
 	/** 默认使用 console.log，用户可自定义日志打印。 */
-	log: _Logger
+	log: Logger
 	/** 解析 url 里的 query。
 	 * @param schema 注意，此 schema 不是 zod 的 schema，而是 npm:zod-form-data 的 zfd.formData 的 schema
 	 */

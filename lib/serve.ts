@@ -1,8 +1,8 @@
 import { not_found, unknown_error } from './error.ts'
-import type { HttpCTX, RawHttpHandler, HttpRoute, HttpServerOpts, _Logger } from './type.ts'
+import type { HttpCTX, RawHttpHandler, HttpRoute, HttpServerOpts, Logger } from './type.ts'
 import { parse_json, parse_query } from './parse_input.ts'
 
-const default_logger: _Logger = {
+const default_logger: Logger = {
 	debug: (...items: unknown[]) => console.debug('[DEBUG]', ...items),
 	info: (...items: unknown[]) => console.log('[INFO]', ...items),
 	warn: (...items: unknown[]) => console.warn('[WARN]', ...items),
@@ -28,7 +28,7 @@ function simple_serve(opts: HttpServerOpts): RawHttpHandler {
 		})
 }
 
-const prefix_log = (log: _Logger, req: Request): _Logger => ({
+const prefix_log = (log: Logger, req: Request): Logger => ({
 	debug: (...items: unknown[]) => log.debug(`[${req.method} ${req.url}]`, ...items),
 	info: (...items: unknown[]) => log.info(`[${req.method} ${req.url}]`, ...items),
 	warn: (...items: unknown[]) => log.warn(`[${req.method} ${req.url}]`, ...items),
@@ -36,7 +36,7 @@ const prefix_log = (log: _Logger, req: Request): _Logger => ({
 })
 
 async function handle_http(job: {
-	log: _Logger
+	log: Logger
 	req: Request
 	routes: HttpRoute[]
 }): Promise<Response> {
