@@ -4,12 +4,27 @@ Simple API 提供最基本的 http api 功能。
 
 ## TODO
 + CORS
-+ input: query & json
 
 ## Features
 + 路径精确匹配，如 `/api` 与 `/api/` 是不同的路径
 + 不支持路径参数，应使用 query
 + 不刻意追求 restful
+
+## 解析 input
+失败时直接 `throw` 400，成功则返回解析后的数据：
+``` ts
+import { z } from 'zod'
+import { zfd } from 'zod-form-data'
+
+// query 要用 zfd.formData，不是 z.object
+const q = ctx.parse_query(zfd.formData({
+	page: zfd.numeric(),
+}))
+
+const body = await ctx.parse_json(z.object({
+	name: z.string(),
+}))
+```
 
 ## 中间件
 不支持。
