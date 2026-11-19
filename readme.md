@@ -34,3 +34,6 @@ for (const route of routes) {
 
 ## 自动生成 api 文档
 不支持。如需要，让 llm 生成一份即可。
+
+## FYI
++ 支持跨域时，response 建议自己 new。比如，不要原样转发 fetch 的结果，因为 fetch 得到的 response 其 header 不可变。
