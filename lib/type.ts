@@ -39,6 +39,7 @@ interface HttpCTX {
 	 * @param schema 注意，此 schema 不是 zod 的 schema，而是 npm:zod-form-data 的 zfd.formData 的 schema
 	 */
 	parse_query: <Q>(schema: z.ZodType<Q>) => Q
+	/** 解析 body 里的 json，只能读一次。 */
 	parse_json: <J>(schema: z.ZodType<J>) => Promise<J>
 }
 
