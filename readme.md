@@ -13,6 +13,7 @@ npx jsr add @ppz/simple-api
 
 ## TODO
 + CORS
++ 利用 `URLPattern` 做 path param 支持
 
 ## Features
 + 路径精确匹配，如 `/api` 与 `/api/` 是不同的路径
