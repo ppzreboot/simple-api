@@ -47,7 +47,7 @@ async function handle_http(job: {
 		log,
 		url,
 		req,
-		parse_query: parse_query(url),
+		parse_query: parse_query(url, log),
 		parse_json: parse_json(req, log),
 	}
 

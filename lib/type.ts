@@ -29,13 +29,17 @@ interface HttpServerOpts {
 	routes: HttpRoute[]
 }
 
+/** HTTP 请求上下文 */
 export
 interface HttpCTX {
 	url: URL
 	req: Request
 	log: _Logger
-	parse_query: <Q>(schema: z.ZodType<Q>) => z.ZodSafeParseResult<Q>
-	parse_json: <J>(schema: z.ZodType<J>) => Promise<z.ZodSafeParseResult<J>>
+	/** 解析 url 里的 query。
+	 * @param schema 注意，此 schema 不是 zod 的 schema，而是 npm:zod-form-data 的 zfd.formData 的 schema
+	 */
+	parse_query: <Q>(schema: z.ZodType<Q>) => Q
+	parse_json: <J>(schema: z.ZodType<J>) => Promise<J>
 }
 
 export

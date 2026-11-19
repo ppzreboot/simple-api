@@ -22,7 +22,7 @@ import { route1, route2 } from './xxx.ts'
 const routes = [route1, route2]
 for (const route of routes) {
 	const raw_handle = route[2]
-	route[2] = ctx => {
+	route[2] = async ctx => {
 		// before
 		const res = await raw_handle(ctx)
 		// after
