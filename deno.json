@@ -4,5 +4,8 @@
 	"license": "Unlicense",
 	"exports": {
 		".": "./lib/zz.ts"
+	},
+	"imports": {
+		"zod": "npm:zod@^4.6.7"
 	}
 }

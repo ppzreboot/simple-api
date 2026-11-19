@@ -1,11 +1,12 @@
 import { not_found, unknown_error } from './error.ts'
 import type { HttpCTX, RawHttpHandler, HttpRoute, HttpServerOpts, _Logger } from './type.ts'
+import { parse_json, parse_query } from './parse_input.ts'
 
 const default_logger: _Logger = {
-	debug: console.debug,
-	info: console.log,
-	warn: console.warn,
-	error: console.error,
+	debug: (...items: unknown[]) => console.debug('[DEBUG]', ...items),
+	info: (...items: unknown[]) => console.log('[INFO]', ...items),
+	warn: (...items: unknown[]) => console.warn('[WARN]', ...items),
+	error: (...items: unknown[]) => console.error('[ERROR]', ...items),
 }
 
 /** http server 入口 */
@@ -27,20 +28,34 @@ function simple_serve(opts: HttpServerOpts): RawHttpHandler {
 		})
 }
 
+const prefix_log = (log: _Logger, req: Request): _Logger => ({
+	debug: (...items: unknown[]) => log.debug(`[${req.method} ${req.url}]`, ...items),
+	info: (...items: unknown[]) => log.info(`[${req.method} ${req.url}]`, ...items),
+	warn: (...items: unknown[]) => log.warn(`[${req.method} ${req.url}]`, ...items),
+	error: (...items: unknown[]) => log.error(`[${req.method} ${req.url}]`, ...items),
+})
+
 async function handle_http(job: {
 	log: _Logger
 	req: Request
 	routes: HttpRoute[]
 }): Promise<Response> {
-	const { log, routes, req } = job
+	const { routes, req } = job
+	const log = prefix_log(job.log, req)
 	const url = new URL(job.req.url)
-	const ctx: HttpCTX = { url, req }
+	const ctx: HttpCTX = {
+		log,
+		url,
+		req,
+		parse_query: parse_query(url),
+		parse_json: parse_json(req, log),
+	}
 
-	log.info('[New HTTP Request]', req.method, url.pathname)
+	log.info('[New HTTP Request]')
 
 	const route = router(routes, ctx)
 	if (route === null) {
-		log.warn('[HTTP - Not Found]', req.method, url.pathname)
+		log.warn('[HTTP - Not Found]')
 		return not_found()
 	}
 
@@ -57,7 +72,7 @@ async function handle_http(job: {
 		}
 	}
 
-	log.info(`[HTTP - Response ${response.status}]`, req.method, url.pathname, Date.now() - start, 'ms')
+	log.info(`[HTTP - Response ${response.status}]`, Date.now() - start, 'ms')
 	return response
 }
 
