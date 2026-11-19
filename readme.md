@@ -2,6 +2,13 @@
 Simple API 提供最基本的 http api 功能。
 旨在在 ai agent 时代，提高人类对代码的掌控度（越简单，越容易掌控）。
 
+``` sh
+# Deno
+deno add @ppz/simple-api
+# Node.js
+npx jsr add @ppz/simple-api
+```
+
 ## TODO
 + CORS
 
