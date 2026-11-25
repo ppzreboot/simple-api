@@ -13,6 +13,9 @@ type make_err = (msg?: string) => Response
  */
 export const bad_request: make_err = _err('baD requesT', 400)
 
+/** 用于验证身份的 token 格式没问题，但可能过期了、失效了，就用这个。 */
+export const bad_auth: make_err = _err('baD autH', 401)
+
 /** 请求路径不存在、路径存在但 http method 不匹配。 */
 export const not_found: make_err = _err('noT founD', 404)
 
