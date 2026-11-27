@@ -2,8 +2,6 @@
 Simple API 提供最基本的 http api 功能。
 旨在在 ai agent 时代，提高人类对代码的掌控度（越简单，越容易掌控）。
 
-[API 文档](https://jsr.io/@ppz/simple-api/doc)
-
 ``` sh
 # Deno
 deno add @ppz/simple-api
@@ -11,36 +9,74 @@ deno add @ppz/simple-api
 npx jsr add @ppz/simple-api
 ```
 
-## TODO
-+ CORS
-+ 利用 `URLPattern` 做 path param 支持
+## 怎么用？
 
-## Features
-+ 路径精确匹配，如 `/api` 与 `/api/` 是不同的路径
-+ 不支持路径参数，应使用 query
-+ 不刻意追求 restful
+#### 一眼懂
 
-## 解析 input
-解析 query 数据时，需手动安装 npm:zod-form-data。
-
-失败时直接 `throw` 400，成功则返回解析后的数据：
-``` ts
+```ts
+import { simple_serve, http_route, respond_json } from '@ppz/simple-api'
 import { z } from 'zod'
+
+// 一条 route。为演示解析 JSON，这里用 POST 请求。
+const hello_route = http_route('POST', '/hello', async ctx => {
+	// 解析 json
+	const data = await ctx.parse_json(
+		z.object({
+			name: z.string(),
+		})
+	) // 如果 json body 格式异常，会响应 400
+
+	return respond_json({
+		hello: data.name,
+	})
+})
+
+// 收集全部 route
+const routes = [
+	hello_route,
+]
+
+// http 入口
+const http_handler = simple_serve({
+	routes,
+})
+
+// Deno
+Deno.serve(http_handler)
+// Cloudflare Workers
+// export default { fetch: http_handler }
+```
+
+> [!WARNING]
+> simple-api 的“怪异行为”：
+> + `/api` 与 `/api/` 是不同的路径
+> + 路径匹配但 method 不匹配时，响应 404，而不是 405
+
+[详细 API 文档](https://jsr.io/@ppz/simple-api/doc)
+
+#### 解析 query
+需手动安装 npm:zod-form-data。
+
+```ts
+import { http_route, respond_json } from '@ppz/simple-api'
 import { zfd } from 'zod-form-data'
 
-// query 要用 zfd.formData，不是 z.object
-const q = ctx.parse_query(zfd.formData({
-	page: zfd.numeric(),
-}))
+const hello_route = http_route('GET', '/hello', ctx => {
+	const query = ctx.parse_query(
+		// query 要用 zfd.formData，不是 z.object
+		zfd.formData({
+			name: zfd.text(),
+		})
+	)
 
-const body = await ctx.parse_json(z.object({
-	name: z.string(),
-}))
+	return respond_json({
+		hello: query.name,
+	})
+})
 ```
 
 ## 中间件
-不支持。
-
+你的下一个中间件不一定非得是中间件。
 推荐做法：[封装 http_route](https://jsr.io/@ppz/simple-api/doc/~/http_route)。
 
 ## 自动生成 api 文档
@@ -61,3 +97,7 @@ const body = await ctx.parse_json(z.object({
 	+ 如“session token 失效”、“改名时，重名”、“支付时，余额不足”。
 	+ 这种错误的特点是：代码本身没问题，但开发者要尽量提供友好的 UI/UX 让用户知晓。
 	+ 响应码方面，除非有非常合适的，如 session token 过期，一般统统响应 200。
+
+## TODO
++ CORS
++ 利用 `URLPattern` 做 path param 支持
