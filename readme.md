@@ -2,6 +2,8 @@
 Simple API 提供最基本的 http api 功能。
 旨在在 ai agent 时代，提高人类对代码的掌控度（越简单，越容易掌控）。
 
+[详细 API 文档](https://jsr.io/@ppz/simple-api/doc)
+
 ``` sh
 # Deno
 deno add @ppz/simple-api
@@ -75,11 +77,11 @@ const hello_route = http_route('GET', '/hello', ctx => {
 })
 ```
 
-## 中间件
+#### 中间件
 你的下一个中间件不一定非得是中间件。
 推荐做法：[封装 http_route](https://jsr.io/@ppz/simple-api/doc/~/http_route)。
 
-## 自动生成 api 文档
+#### 自动生成 api 文档
 不支持。如需要，让 llm 生成一份即可。
 
 ## FYI
